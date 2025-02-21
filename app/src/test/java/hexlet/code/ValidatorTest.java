@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import hexlet.code.schemas.NumberSchema;
 import hexlet.code.schemas.StringSchema;
 import org.junit.jupiter.api.Test;
 
@@ -8,26 +9,39 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ValidatorTest {
     @Test
-    public void testValidator() {
+    public void testStringSchema() {
         Validator validator = new Validator();
-        StringSchema schema = validator.string();
+        StringSchema stringSchema = validator.string();
+        stringSchema.minLength(5).contains("test").required();
 
-        assertTrue(schema.isValid(""));
-        assertTrue(schema.isValid(null));
+        assertFalse(stringSchema.isValid(null));
+        assertFalse(stringSchema.isValid(""));
 
-        schema.required();
-        assertFalse(schema.isValid(null));
-        assertFalse(schema.isValid(""));
+        assertTrue(stringSchema.isValid("this is a test string"));
+        assertFalse(stringSchema.isValid("this string does not contain the keyword"));
+        assertTrue(stringSchema.isValid("this string contains test"));
 
-        assertTrue(schema.isValid("what does the fox say"));
-        assertTrue(schema.isValid("hexlet"));
+        assertFalse(stringSchema.isValid("Hexlet"));
+        assertFalse(stringSchema.isValid("Hex"));
+    }
 
-        assertTrue(schema.contains("wh").isValid("what does the fox say"));
-        assertFalse(schema.contains("whatthe").isValid("what does the fox say"));
+    @Test
+    public void testNumberValidator() {
+        Validator validator = new Validator();
+        NumberSchema numberSchema = validator.number();
 
-        StringSchema schemaMin = validator.string().minLength(4);
-        assertTrue(schemaMin.isValid("Hexlet"));
-        assertFalse(schemaMin.isValid("Hex"));
+        assertTrue(numberSchema.isValid(null));
 
+        numberSchema.required();
+        assertTrue(numberSchema.isValid(5));
+        assertTrue(numberSchema.isValid(10));
+        assertFalse(numberSchema.positive().isValid(-10));
+        assertFalse(numberSchema.positive().isValid(0));
+
+        numberSchema.range(5, 10);
+        assertTrue(numberSchema.isValid(5));
+        assertFalse(numberSchema.isValid(4));
+        assertFalse(numberSchema.isValid(11));
+        assertTrue(numberSchema.isValid(10));
     }
 }
