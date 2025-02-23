@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 
 public abstract class BaseSchema<T> {
     protected boolean isRequired = false;
-    private Map<String, Predicate<T>> validations = new HashMap<>();
+    protected Map<String, Predicate<T>> validations = new HashMap<>();
 
     public BaseSchema<T> required() {
         isRequired = true;

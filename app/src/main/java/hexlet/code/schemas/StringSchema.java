@@ -9,13 +9,15 @@ public class StringSchema extends BaseSchema<String> {
 
     public StringSchema minLength(int length) {
         minLength = length;
-        addValidation("minLength", value -> value != null && value.length() >= minLength);
+        addValidation("minLength", value -> value != null
+                && value.length() >= minLength);
         return this;
     }
 
     public StringSchema contains(String subString) {
         contains.add(subString);
-        addValidation("contains", value -> value != null && value.contains(subString));
+        addValidation("contains", value -> value != null
+                && value.contains(subString));
         return this;
     }
 
