@@ -33,7 +33,7 @@ public class ValidatorTest {
         assertFalse(stringSchema.isValid("what does the fox say"));
 
         var schema1 = validator.string();
-        assertTrue(schema1.minLength(10).minLength(4).isValid("hexlet"));
+        assertTrue(schema1.required().minLength(10).minLength(4).isValid("hexlet"));
         assertFalse(stringSchema.isValid("Hexlet"));
         assertFalse(stringSchema.isValid("Hex"));
     }
@@ -91,8 +91,8 @@ public class ValidatorTest {
         var schema = validator.map();
 
         Map<String, BaseSchema<String>> schemas = new HashMap<>();
-        schemas.put("firstName", validator.string().required());
-        schemas.put("lastName", validator.string().minLength(2).required());
+        schemas.put("firstName", validator.string().required().contains("oh"));
+        schemas.put("lastName", validator.string().required().minLength(2).contains("it"));
 
         schema.shape(schemas);
 
@@ -114,7 +114,7 @@ public class ValidatorTest {
         Map<String, String> human4 = new HashMap<>();
         human4.put("firstName", "Alica");
         human4.put("lastName", "Cooper");
-        assertTrue(schema.isValid(human4));
+        assertFalse(schema.isValid(human4));
 
         Map<String, String> human5 = new HashMap<>();
         human5.put("firstName", "Johnson");

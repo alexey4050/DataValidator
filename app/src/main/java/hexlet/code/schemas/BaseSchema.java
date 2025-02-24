@@ -11,7 +11,7 @@ public abstract class BaseSchema<T> {
         validations.put(name, validation);
     }
 
-    public boolean isValid(T value) {
+    public final boolean isValid(T value) {
         return validations.values().stream().allMatch(check -> check.test(value));
     }
 
