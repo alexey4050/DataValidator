@@ -1,11 +1,13 @@
 package hexlet.code;
 
+import hexlet.code.schemas.BaseSchema;
 import hexlet.code.schemas.MapSchema;
 import hexlet.code.schemas.NumberSchema;
 import hexlet.code.schemas.StringSchema;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -51,7 +53,7 @@ public class ValidatorTest {
     @Test
     public void testMapSchema() {
         Validator validator = new Validator();
-        MapSchema mapSchema = validator.map();
+        MapSchema<String, String> mapSchema = validator.map();
 
         assertTrue((mapSchema.isValid(null)));
 
@@ -72,4 +74,41 @@ public class ValidatorTest {
         data.put("key3", "value3");
         assertFalse(mapSchema.isValid(data));
     }
+
+    @Test
+    public void testShapeWithAdditional() {
+        Validator validator = new Validator();
+        var schema = validator.map();
+
+        Map<String, BaseSchema<String>> schemas = new HashMap<>();
+        schemas.put("firstName", validator.string().required());
+        schemas.put("lastName", validator.string().minLength(2).required());
+
+        schema.shape(schemas);
+
+        Map<String, String> human1 = new HashMap<>();
+        human1.put("firstName", "John");
+        human1.put("lastName", "Smith");
+        assertTrue(schema.isValid(human1));
+
+        Map<String, String> human2 = new HashMap<>();
+        human2.put("firstName", "John");
+        human2.put("lastName", null);
+        assertFalse(schema.isValid(human2));
+
+        Map<String, String> human3 = new HashMap<>();
+        human3.put("firstName", "Anna");
+        human3.put("lastName", "B");
+        assertFalse(schema.isValid(human3));
+
+        Map<String, String> human4 = new HashMap<>();
+        human4.put("firstName", "Alica");
+        human4.put("lastName", "Cooper");
+        assertTrue(schema.isValid(human4));
+
+        Map<String, String> human5 = new HashMap<>();
+        human5.put("firstName", "Johnson");
+        assertFalse(schema.isValid(human5));
+    }
+
 }
