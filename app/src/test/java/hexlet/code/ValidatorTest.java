@@ -31,6 +31,16 @@ public class ValidatorTest {
     }
 
     @Test
+    public void testStringSchemaWithMinLength() {
+        Validator validator = new Validator();
+        StringSchema stringSchema = validator.string().minLength(5).minLength(10);
+
+        assertFalse(stringSchema.isValid(""));
+        assertFalse(stringSchema.isValid("abcde"));
+        assertTrue(stringSchema.isValid("abcdefghijk"));
+    }
+
+    @Test
     public void testNumberValidator() {
         Validator validator = new Validator();
         NumberSchema numberSchema = validator.number();
@@ -81,8 +91,8 @@ public class ValidatorTest {
         var schema = validator.map();
 
         Map<String, BaseSchema<String>> schemas = new HashMap<>();
-        schemas.put("firstName", validator.string().required());
-        schemas.put("lastName", validator.string().minLength(2).required());
+        schemas.put("firstName", validator.string().contains("oh").required());
+        schemas.put("lastName", validator.string().minLength(2).contains("mi").required());
 
         schema.shape(schemas);
 
@@ -104,7 +114,7 @@ public class ValidatorTest {
         Map<String, String> human4 = new HashMap<>();
         human4.put("firstName", "Alica");
         human4.put("lastName", "Cooper");
-        assertTrue(schema.isValid(human4));
+        assertFalse(schema.isValid(human4));
 
         Map<String, String> human5 = new HashMap<>();
         human5.put("firstName", "Johnson");
