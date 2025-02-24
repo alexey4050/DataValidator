@@ -7,7 +7,7 @@ public class NumberSchema extends BaseSchema<Number> {
     }
     public NumberSchema range(double min, double max) {
         addValidation("range", value -> value != null && value.doubleValue() >= min
-        && value.doubleValue() <= max);
+                && value.doubleValue() <= max);
         return this;
     }
 }
