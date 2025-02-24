@@ -7,16 +7,24 @@ public class StringSchema extends BaseSchema<String> {
     private int minLength = -1;
     private List<String> contains = new ArrayList<>();
 
+    public StringSchema required() {
+        addValidation("required", value -> value != null && !value.isEmpty());
+        return this;
+    }
+
     public StringSchema minLength(int length) {
-        minLength = length;
+        if (length < 0) {
+            throw new IllegalArgumentException("Минимальная длина не может быть отрицательной");
+        }
+        this.minLength = length;
         addValidation("minLength", value -> value != null
                 && value.length() >= minLength);
         return this;
     }
 
     public StringSchema contains(String subString) {
-        contains.add(subString);
-        addValidation("contains", value -> value != null
+        this.contains.add(subString);
+        addValidation("contains_" + subString, value -> value != null
                 && value.contains(subString));
         return this;
     }
@@ -26,9 +34,12 @@ public class StringSchema extends BaseSchema<String> {
         if (!super.isValid(value)) {
             return false;
         }
+        if (minLength != -1 && value.length() < minLength) {
+            return false;
+        }
 
         for (String subString : contains) {
-            if (value != null && !value.contains(subString)) {
+            if (value == null || !value.contains(subString)) {
                 return false;
             }
         }

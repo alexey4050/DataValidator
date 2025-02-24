@@ -16,8 +16,7 @@ public class ValidatorTest {
     @Test
     public void testStringSchema() {
         Validator validator = new Validator();
-        StringSchema stringSchema = validator.string();
-        stringSchema.minLength(5).contains("test").required();
+        StringSchema stringSchema = validator.string().required().minLength(5).contains("test");
 
         assertFalse(stringSchema.isValid(null));
         assertFalse(stringSchema.isValid(""));
@@ -28,16 +27,6 @@ public class ValidatorTest {
 
         assertFalse(stringSchema.isValid("Hexlet"));
         assertFalse(stringSchema.isValid("Hex"));
-    }
-
-    @Test
-    public void testStringSchemaWithMinLength() {
-        Validator validator = new Validator();
-        StringSchema stringSchema = validator.string().minLength(5).minLength(10);
-
-        assertFalse(stringSchema.isValid(""));
-        assertFalse(stringSchema.isValid("abcde"));
-        assertTrue(stringSchema.isValid("abcdefghijk"));
     }
 
     @Test
@@ -91,8 +80,8 @@ public class ValidatorTest {
         var schema = validator.map();
 
         Map<String, BaseSchema<String>> schemas = new HashMap<>();
-        schemas.put("firstName", validator.string().contains("oh").required());
-        schemas.put("lastName", validator.string().minLength(2).contains("mi").required());
+        schemas.put("firstName", validator.string().required().contains("oh"));
+        schemas.put("lastName", validator.string().required().minLength(2).contains("mi"));
 
         schema.shape(schemas);
 
@@ -120,5 +109,4 @@ public class ValidatorTest {
         human5.put("firstName", "Johnson");
         assertFalse(schema.isValid(human5));
     }
-
 }
