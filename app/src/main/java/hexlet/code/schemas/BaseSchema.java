@@ -12,11 +12,8 @@ public abstract class BaseSchema<T> {
     }
 
     public boolean isValid(T value) {
-        for (Predicate<T> validator : validations.values()) {
-            if (!validator.test(value)) {
-                return false;
-            }
-        }
-        return true;
+        return validations.values().stream().allMatch(check -> check.test(value));
     }
+
+    public abstract BaseSchema<T> required();
 }
