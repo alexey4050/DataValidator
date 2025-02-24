@@ -37,6 +37,7 @@ public class ValidatorTest {
         assertTrue(numberSchema.isValid(null));
 
         numberSchema.required();
+        assertFalse(numberSchema.isValid(null));
         assertTrue(numberSchema.isValid(5));
         assertTrue(numberSchema.isValid(10));
         assertFalse(numberSchema.positive().isValid(-10));
