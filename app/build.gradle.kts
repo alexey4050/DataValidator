@@ -1,5 +1,5 @@
 plugins {
-    application
+    java
     checkstyle
     jacoco
 }
