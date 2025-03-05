@@ -33,18 +33,18 @@ package hexlet.code.schemas;
 public final class StringSchema extends BaseSchema<String> {
 
     public StringSchema required() {
-        addValidation("required", value -> value != null && !value.isEmpty());
+        addValidation("required", value -> !isNullAllowed(value) && !value.isEmpty());
         return this;
     }
 
     public StringSchema minLength(int length) {
-        addValidation("minLength", value -> value == null
+        addValidation("minLength", value -> isNullAllowed(value)
                 || value.length() >= length);
         return this;
     }
 
     public StringSchema contains(String subString) {
-        addValidation("contains", value -> value == null
+        addValidation("contains", value -> isNullAllowed(value)
                 || value.contains(subString));
         return this;
     }
@@ -60,18 +60,18 @@ import java.util.Objects;
 public final class NumberSchema extends BaseSchema<Integer> {
 
     @Override
-    public BaseSchema<Integer> required() {
-        addValidation("required", Objects::nonNull);
+    public NumberSchema required() {
+        addValidation("required", value -> !isNullAllowed(value));
         return this;
     }
 
     public NumberSchema positive() {
-        addValidation("positive", value -> value == null || value > 0);
+        addValidation("positive", value -> isNullAllowed(value) || value > 0);
         return this;
     }
 
     public NumberSchema range(int startWithNumber, int endWithNumber) {
-        addValidation("range", value -> value == null || value >= startWithNumber 
+        addValidation("range", value -> isNullAllowed(value) || value >= startWithNumber 
                 && value <= endWithNumber);
         return this;
     }
@@ -87,17 +87,17 @@ public final class MapSchema extends BaseSchema<Map<?, ?>> {
 
     @Override
     public BaseSchema<Map<?, ?>> required() {
-        addValidation("required", Objects::nonNull);
+        addValidation("required", value -> !isNullAllowed(value));
         return this;
     }
 
     public MapSchema sizeof(int size) {
-        addValidation("sizeof", value -> value ==  null || value.size() == size);
+        addValidation("sizeof", value -> value -> isNullAllowed(value) || value.size() == size);
         return this;
     }
     @SuppressWarnings("unchecked")
     public <K, V> MapSchema shape(Map<K, BaseSchema<V>> schemas) {
-        addValidation("shape", map -> map != null && schemas.entrySet().stream()
+        addValidation("shape", map -> !isNullAllowed(schemas) && schemas.entrySet().stream()
                 .allMatch(schema -> schema.getValue().isValid((V) map.get(schema.getKey()))));
         return this;
     }
