@@ -1,22 +1,20 @@
 package hexlet.code.schemas;
 
-import java.util.Objects;
-
 public final class NumberSchema extends BaseSchema<Integer> {
 
     @Override
-    public BaseSchema<Integer> required() {
-        addValidation("required", Objects::nonNull);
+    public NumberSchema required() {
+        addValidation("required", value -> !isNullAllowed(value));
         return this;
     }
 
     public NumberSchema positive() {
-        addValidation("positive", value -> value == null || value > 0);
+        addValidation("positive", value -> isNullAllowed(value) || value > 0);
         return this;
     }
 
     public NumberSchema range(int startWithNumber, int endWithNumber) {
-        addValidation("range", value -> value == null || value >= startWithNumber
+        addValidation("range", value -> isNullAllowed(value) || value >= startWithNumber
                 && value <= endWithNumber);
         return this;
     }

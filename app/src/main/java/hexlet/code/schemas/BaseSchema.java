@@ -11,6 +11,10 @@ public abstract class BaseSchema<T> {
         validations.put(name, validation);
     }
 
+    protected boolean isNullAllowed(T value) {
+        return value == null;
+    }
+
     public final boolean isValid(T value) {
         return validations.values().stream().allMatch(check -> check.test(value));
     }
