@@ -11,7 +11,7 @@ public abstract class BaseSchema<T> {
         validations.put(name, validation);
     }
 
-    protected boolean isNullAllowed(T value) {
+    protected final boolean isNullAllowed(T value) {
         return value == null;
     }
 
